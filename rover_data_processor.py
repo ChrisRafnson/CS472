@@ -180,13 +180,15 @@ def process_bag_file(source_file, dest_folder=None, skip_if_exists=True):
 
 
 def main():
-    #loop through bag files in the given directory
-    for filename in os.listdir(SOURCE_PATH):
-        if filename.endswith(".bag"):
-            source_file = os.path.join(SOURCE_PATH, filename)
-            process_bag_file(source_file)
-        else:
-            continue
+    # #loop through bag files in the given directory
+    # for filename in os.listdir(SOURCE_PATH):
+    #     if filename.endswith(".bag"):
+    #         source_file = os.path.join(SOURCE_PATH, filename)
+    #         process_bag_file(source_file)
+    #     else:
+    #         continue
+    source_file = os.path.join(SOURCE_PATH, "cloning_20240404-111837.bag")
+    process_bag_file(source_file)
 
 
 if __name__ == "__main__":

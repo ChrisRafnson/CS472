@@ -29,11 +29,36 @@ TRAIN_VAL_SPLIT = 0.8  # Train/validation split ratio
 
 
 # Define the CNN model structure
-def define_model(input_shape=(80, 160, 1)):
+def define_model(input_shape=(320, 160, 1)):
     
     # Build you model here...
-    model = Sequential([
-    ])
+    # Define the CNN model
+    model = Sequential()
+
+    # Add the first convolutional layer
+    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(320, 160, 1)))
+    model.add(MaxPooling2D((2, 2)))
+
+    # Add the second convolutional layer
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(MaxPooling2D((2, 2)))
+
+    # Flatten the output before feeding into dense layer
+    model.add(Flatten())
+    model.add(BatchNormalization())
+    # Add a fully connected layer
+    model.add(Dense(64, activation='relu'))
+    model.add(Dropout(.2))
+    model.add(Dense(64, activation='relu'))
+    model.add(Dropout(.2))
+    model.add(Dense(32, activation='relu'))
+    model.add(Dense(16, activation='relu'))
+
+    # Output layer
+    model.add(Dense(2))
+
+    # Compile the model
+    model.compile(optimizer='adam', loss='root_mean_squared_error', metrics=['accuracy'])
     
     #Do not forget to compile your model here!
     # Compile and select an aoptimizer (probably Adam() and a loss - try mean squared error

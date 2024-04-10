@@ -19,10 +19,10 @@ import numpy as np
 # Constants defining the range of steering and throttle values
 # Note that these should match YOUR rover's range 
 # (each rover is different -ASK HOW to get these ranges!)
-STEERING_MIN = 1192
-STEERING_MAX = 1792
-THROTTLE_MIN = 1492
-THROTTLE_MAX = 1800
+STEERING_MIN = 982
+STEERING_MAX = 1998
+THROTTLE_MIN = 985
+THROTTLE_MAX = 2006
 
 """
 HINT:  Get values to the above by querying your own rover...

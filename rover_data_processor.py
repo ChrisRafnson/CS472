@@ -187,7 +187,7 @@ def main():
     #         process_bag_file(source_file)
     #     else:
     #         continue
-    source_file = os.path.join(SOURCE_PATH, "cloning_20240404-111837.bag")
+    source_file = os.path.join(SOURCE_PATH, "cloning_20240408-205602.bag")
     process_bag_file(source_file)
 
 

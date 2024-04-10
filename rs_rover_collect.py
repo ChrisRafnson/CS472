@@ -166,14 +166,14 @@ if __name__ == "__main__":
     while True:
         print("Arm vehicle to start new recording.")
         print("(CTRL-C to stop process)")
-        print("throttle_max:")
-        print(rover.parameters['RC3_MAX'])
-        print("throttle_min:")
-        print(rover.parameters['RC3_MIN'])
-        print("steering_max:")
-        print(rover.parameters['RC1_MAX'])
-        print("steering_min:")
-        print(rover.parameters['RC1_MIN'])
+        #print("throttle_max:")
+        #print(rover.parameters['RC3_MAX'])
+        #print("throttle_min:")
+        #print(rover.parameters['RC3_MIN'])
+        #print("steering_max:")
+        #print(rover.parameters['RC1_MAX'])
+        #print("steering_min:")
+        #print(rover.parameters['RC1_MIN'])
         while not connection.armed:
             time.sleep(1)
 

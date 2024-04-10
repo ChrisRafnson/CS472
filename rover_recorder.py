@@ -46,7 +46,7 @@ def get_video_data(pipeline):
 
     color_image = np.asanyarray(color_frame.get_data()) #get image from frame data
     color_image_fn = color_frame.get_frame_number()
-    cv2.imshow('color', color_image) #display image
+    # cv2.imshow('color', color_image) #display image
 
     return color_image_fn
 
@@ -66,10 +66,15 @@ def get_rover_data(rover):
     return [throttle, steering, heading]
 
 #add data points to the csv file
+def append_ardu_data(throttle, steering, heading, idx, file):
+    f = open(file, "a+")
+    f.write(f"{idx}, {throttle},{steering},{heading}\n")
+    f.close()
+
 def append_data(data, index, data_file):
     field_names = ['index', 'throttle', 'steering', 'heading']
     data_dict = {'index': index, 'throttle': data[0], 'steering': data[1], 'heading': data[2]}
-    csv.DictWriter(data_file,  fieldnames=field_names).writerow(data_dict)
+    csv.DictWriter(data_file, fieldnames=field_names).writerow(data_dict)
 
 def main():
     port = "/dev/ttyUSB0"
@@ -82,20 +87,17 @@ def main():
 
         #get starting timestamp for file naming
         print("Arming Drone...")
-        run = datetime.datetime.now()
-
-        #create bag file
-        bag = rosbag.Bag(f'/media/usafa/drone_data/rover_data/{run}.bag', 'w')
+        run = datetime.datetime.now() 
 
         #create csv and add headers
-        header = ['index', 'throttle', 'steering', 'heading']
+        header = ['index', 'throttle', 'steering', 'heading','\n']
 
-        with open(f'/media/usafa/drone_data/rover_data/{run}.csv', 'w') as f:
-            writer = csv.writer(f)
-            writer.writerow(header)
-
+        # with open(f'/media/usafa/drone_data/rover_data/{run}.csv', 'w+') as f:
+        #     writer = csv.writer(f)
+        #     writer.writerow(header)
+        data_file = '/media/usafa/drone_data/rover_data/' + str(run) + '.csv'
         #reopen csv for the remainder of the run
-        data_file = open(f'/media/usafa/drone_data/rover_data/{run}.csv', 'a')
+        data_file.write(header)
         pipeline = initialize_pipeline(run)
 
         while rover.armed:
@@ -110,7 +112,7 @@ def main():
             #get data from rover: throttle, steering, heading
             data = get_rover_data(rover)
             #add data to csv with current frame index
-            append_data(data, index, data_file)
+            append_data(data[0], data[1], data[2], index, data_file)
 
         print("Recording Finished - Closing File")
         pipeline.stop()

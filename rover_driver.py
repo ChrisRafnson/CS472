@@ -15,14 +15,14 @@ import time
 import numpy as np
 import cv2
 import keras
-import common.drone_lib as dl
+import utilities.drone_lib as dl
 
 # Path to the trained model weights
-MODEL_NAME = "models/V6.6_SGD_Batch115_664Steps/rover_model06_ver06_epoch0095_val_loss0.005095.h5"
+MODEL_NAME = "models/rover_model_01_ver03_epoch0025_val_loss0.0123.h5"
 
 # Rover driving command limits
-MIN_STEERING, MAX_STEERING = 1000, 2000
-MIN_THROTTLE, MAX_THROTTLE = 1500, 2000
+MIN_STEERING, MAX_STEERING = 982, 1998
+MIN_THROTTLE, MAX_THROTTLE = 985, 2006
 
 """
 HINT:  Get values to the above by querying your own rover...
@@ -33,9 +33,11 @@ steering_min = rover.parameters['RC1_MIN']
 """
 
 # Image processing parameters
-white_L, white_H = 200, 255  # White color range
-resize_W, resize_H = 160, 120  # Resized image dimensions
-crop_W, crop_B, crop_T = 160, 120, 40  # Crop box dimensions
+white_L, white_H = 220, 255  # White color range
+resize_W, resize_H = 320, 240  # Resized image dimensions
+crop_W = int(resize_W)
+crop_B = resize_H
+crop_T = int(resize_H/3)
 
 def get_model(filename):
     """Load and compile the TensorFlow Keras model."""
@@ -55,7 +57,7 @@ def invert_min_max_norm(val, v_min=1000.0, v_max=2000.0):
 def denormalize(steering, throttle):
     """Denormalize steering and throttle values to the rover's command range."""
     steering = invert_min_max_norm(steering, MIN_STEERING, MAX_STEERING)
-    throttle = invert_min_max_norm(steering, MIN_THROTTLE, MAX_THROTTLE)
+    throttle = invert_min_max_norm(throttle, MIN_THROTTLE, MAX_THROTTLE)
     return steering, throttle
 
 def initialize_pipeline():
@@ -77,11 +79,15 @@ def get_video_data(pipeline):
     
     #TODO: process your incoming frame so that it is 
     #      in the form required to feed into your CNN.
-    image = cv2.resize(image, (resize_W, resize_H))
-    # Maybe convert to gray
-    # Then, turn into B&W (using cv.inRange)
-    # Perform cropping (if any)
-    # etc...
+    # resize frame
+    color_frame = cv2.resize(image, (resize_W, resize_H))
+
+    #convert to BW image for easier line detection
+    gray_frame = cv2.cvtColor(color_frame, cv2.COLOR_BGR2GRAY)
+    BW_frame = cv2.inRange(gray_frame, white_L, white_H)
+
+    # Crop Bw image
+    image = BW_frame[crop_T:crop_B, 0:crop_W]
 
     return image
 
@@ -128,17 +134,25 @@ def main():
         pipeline = initialize_pipeline()
         
         while rover.armed:
+        # while True:
             processed_image = get_video_data(pipeline)
             if processed_image is None:
                 print("No image from camera.")
                 continue
+            processed_image = np.expand_dims(processed_image, axis = -1)
+
+            # processed_image = np.expand_dims(processed_image, axis = 0)
+            processed_image = np.transpose(processed_image)
+
 
             # Predict steering and throttle from the processed image
             output = model.predict(processed_image)
             steering, throttle = denormalize(output[0][0], output[0][1])
 
             # Send commands to the rover
-            set_rover_data(rover, steering, throttle)
+            set_rover_data(rover, int(steering), int(throttle))
+            print(steering)
+            print(throttle)
 
         # stop recording
         pipeline.stop()

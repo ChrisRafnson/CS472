@@ -19,28 +19,28 @@ from keras.callbacks import ModelCheckpoint
 from matplotlib import pyplot
 
 # Configuration parameters
-DEVICE = "/CPU:0"  # Device to use for computation. Change to "/GPU:0" if GPU is available
-DATA_PATH = "/media/data/rover_data/processed/smooth/left"  # Path to the processed data
+DEVICE = "/GPU:0"  # Device to use for computation. Change to "/GPU:0" if GPU is available
+DATA_PATH = "/media/usafa/drone_data/rover_data_processed"  # Path to the processed data
 MODEL_NUM = 1 # Model number for naming
-TRAINING_VER = 1  # Training version for naming
-NUM_EPOCHS = 5  # Number of epochs to train
+TRAINING_VER = 5 # Training version for naming
+NUM_EPOCHS = 20  # Number of epochs to train
 BATCH_SIZE = 13  # Batch size for training
 TRAIN_VAL_SPLIT = 0.8  # Train/validation split ratio
 
 
 # Define the CNN model structure
-def define_model(input_shape=(320, 160, 1)):
+def define_model(input_shape=(160, 320, 1)):
     
     # Build you model here...
     # Define the CNN model
     model = Sequential()
 
     # Add the first convolutional layer
-    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(320, 160, 1)))
+    model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(320, 160, 1)))
     model.add(MaxPooling2D((2, 2)))
 
     # Add the second convolutional layer
-    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(Conv2D(32, (3, 3), activation='relu'))
     model.add(MaxPooling2D((2, 2)))
 
     # Flatten the output before feeding into dense layer
@@ -49,7 +49,7 @@ def define_model(input_shape=(320, 160, 1)):
     # Add a fully connected layer
     model.add(Dense(64, activation='relu'))
     model.add(Dropout(.2))
-    model.add(Dense(64, activation='relu'))
+    model.add(Dense(32, activation='relu'))
     model.add(Dropout(.2))
     model.add(Dense(32, activation='relu'))
     model.add(Dense(16, activation='relu'))
@@ -58,7 +58,7 @@ def define_model(input_shape=(320, 160, 1)):
     model.add(Dense(2))
 
     # Compile the model
-    model.compile(optimizer='adam', loss='root_mean_squared_error', metrics=['accuracy'])
+    model.compile(optimizer='adam', loss='mean_squared_error', metrics=['accuracy'])
     
     #Do not forget to compile your model here!
     # Compile and select an aoptimizer (probably Adam() and a loss - try mean squared error

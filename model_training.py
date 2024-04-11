@@ -22,7 +22,7 @@ from matplotlib import pyplot
 DEVICE = "/GPU:0"  # Device to use for computation. Change to "/GPU:0" if GPU is available
 DATA_PATH = "/media/usafa/drone_data/rover_data_processed_slow"  # Path to the processed data
 MODEL_NUM = 1 # Model number for naming
-TRAINING_VER = 2 # Training version for naming
+TRAINING_VER = 3 # Training version for naming
 NUM_EPOCHS = 10  # Number of epochs to train
 BATCH_SIZE = 13  # Batch size for training
 TRAIN_VAL_SPLIT = 0.8  # Train/validation split ratio

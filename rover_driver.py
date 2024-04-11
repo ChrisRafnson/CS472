@@ -19,7 +19,7 @@ import utilities.drone_lib as dl
 
 # Path to the trained model weights
 #MODEL_NAME = "models/rover_model_02_ver02_epoch0010_val_loss0.0019.h5"
-MODEL_NAME = "models/rover_model_01_ver02_epoch0010_val_loss0.0018.h5"
+MODEL_NAME = "models/rover_model_01_ver03_epoch0010_val_loss0.0013.h5"
 
 # Rover driving command limits
 MIN_STEERING, MAX_STEERING = 982, 1998
@@ -159,7 +159,7 @@ def main():
         pipeline.stop()
         time.sleep(1)
         pipeline = None
-        rover.close()
+        # rover.close()
         print("Done.")
 
 if __name__ == "__main__":

@@ -115,7 +115,7 @@ def process_bag_file(source_file, dest_folder=None, skip_if_exists=True):
 
                 # resize frame
                 color_frame = cv2.resize(color_frame, (resize_W, resize_H))
-
+    
                 #convert to BW image for easier line detection
                 gray_frame = cv2.cvtColor(color_frame, cv2.COLOR_BGR2GRAY)
                 BW_frame = cv2.inRange(gray_frame, white_L, white_H)

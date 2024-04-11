@@ -126,7 +126,7 @@ def process_bag_file(source_file, dest_folder=None, skip_if_exists=True):
                 i += 1
 
                 # show the output frame for sanity check
-                cv2.imshow("gray", gray_frame)
+                # cv2.imshow("gray", gray_frame)
                 cv2.imshow("Black and white", BW_frame)
                 cv2.imshow("Color Processed", color_frame)
 
@@ -180,15 +180,15 @@ def process_bag_file(source_file, dest_folder=None, skip_if_exists=True):
 
 
 def main():
-    # #loop through bag files in the given directory
-    # for filename in os.listdir(SOURCE_PATH):
-    #     if filename.endswith(".bag"):
-    #         source_file = os.path.join(SOURCE_PATH, filename)
-    #         process_bag_file(source_file)
-    #     else:
-    #         continue
-    source_file = os.path.join(SOURCE_PATH, "cloning_20240408-205602.bag")
-    process_bag_file(source_file)
+    #loop through bag files in the given directory
+    for filename in os.listdir(SOURCE_PATH):
+        if filename.endswith(".bag"):
+            source_file = os.path.join(SOURCE_PATH, filename)
+            process_bag_file(source_file)
+        else:
+            continue
+    # source_file = os.path.join(SOURCE_PATH, "cloning_20240408-205602.bag")
+    # process_bag_file(source_file)
 
 
 if __name__ == "__main__":

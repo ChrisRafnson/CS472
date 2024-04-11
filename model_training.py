@@ -20,10 +20,10 @@ from matplotlib import pyplot
 
 # Configuration parameters
 DEVICE = "/GPU:0"  # Device to use for computation. Change to "/GPU:0" if GPU is available
-DATA_PATH = "/media/usafa/drone_data/rover_data_processed"  # Path to the processed data
+DATA_PATH = "/media/usafa/drone_data/rover_data_processed_slow"  # Path to the processed data
 MODEL_NUM = 1 # Model number for naming
-TRAINING_VER = 5 # Training version for naming
-NUM_EPOCHS = 20  # Number of epochs to train
+TRAINING_VER = 2 # Training version for naming
+NUM_EPOCHS = 10  # Number of epochs to train
 BATCH_SIZE = 13  # Batch size for training
 TRAIN_VAL_SPLIT = 0.8  # Train/validation split ratio
 
@@ -35,24 +35,38 @@ def define_model(input_shape=(160, 320, 1)):
     # Define the CNN model
     model = Sequential()
 
-    # Add the first convolutional layer
+    #MODEL 1: 6.5 million parameters
+    # # Add the first convolutional layer
     model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(320, 160, 1)))
     model.add(MaxPooling2D((2, 2)))
 
     # Add the second convolutional layer
     model.add(Conv2D(32, (3, 3), activation='relu'))
-    model.add(MaxPooling2D((2, 2)))
+    model.add(MaxPooling2D((3, 3)))
 
     # Flatten the output before feeding into dense layer
     model.add(Flatten())
-    model.add(BatchNormalization())
     # Add a fully connected layer
-    model.add(Dense(64, activation='relu'))
-    model.add(Dropout(.2))
+    model.add(Dense(48, activation='relu'))
     model.add(Dense(32, activation='relu'))
-    model.add(Dropout(.2))
     model.add(Dense(32, activation='relu'))
     model.add(Dense(16, activation='relu'))
+
+    #MODEL 2: 3.0 million params
+    # Add the first convolutional layer
+    # model.add(Conv2D(16, (2, 2), activation='relu', input_shape=(320, 160, 1)))
+    # model.add(MaxPooling2D((3, 3)))
+
+    # # # Add the second convolutional layer
+    # model.add(Conv2D(32, (2, 2), activation='relu'))
+    # model.add(MaxPooling2D((3, 3)))
+
+    # model.add(Flatten())
+    # # Add a fully connected layer
+    # model.add(Dense(64, activation='relu'))
+    # # model.add(Dropout(.2))
+    # model.add(Dense(24, activation='relu'))
+    # # model.add(Dropout(.2))
 
     # Output layer
     model.add(Dense(2))
